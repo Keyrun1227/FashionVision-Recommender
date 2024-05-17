@@ -12,13 +12,13 @@ from numpy.linalg import norm
 import pickle
 from sklearn.neighbors import NearestNeighbors
 
-
 # Set the page configuration to use the full screen width
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide", page_title="🤖Kiran's FashionVision Recommender🔍️")
+
 
 # Set the title and header
-st.title("Fashion Recommendation System")
-st.header("Find similar products to your uploaded image")
+st.markdown("<h1 style='text-align: center; color: #ff5733; font-family: Times New Roman;'>FashionVision Recommender🛍️</h1>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; font-family: Times New Roman;'>Find similar products to your uploaded or captured image 📸</h2>", unsafe_allow_html=True)
 
 # Load the feature list and filenames
 feature_list = np.array(pickle.load(open('embeddings.pkl', 'rb')))
@@ -60,48 +60,54 @@ def save_uploaded_file(uploaded_file):
     except:
         return 0
 
-# Create the file uploader
-uploaded_file = st.file_uploader("Choose an Image to get similar products", type=['jpg', 'png', 'jpeg'])
+def display_recommendations(indices, csv_data, filenames):
+    st.subheader("Similar Products:")
+    for row in range(2):
+        cols_row = st.columns(3)
+        for col in range(3):
+            idx = row * 3 + col + 1  # Start from index 1
+            if idx < len(indices[0]):
+                product_info = csv_data.iloc[indices[0][idx]]
+                with cols_row[col]:
+                    st.write(f"<h4 style='color:red;'>{product_info['productDisplayName']}</h4>", unsafe_allow_html=True)
+                    st.image(filenames[indices[0][idx]], width=200, caption=product_info['productDisplayName'])
+                    st.markdown("  \n  \n")
+                    st.write(f"**Gender:** {product_info['gender']}")
+                    st.write(f"**Master Category:** {product_info['masterCategory']}")
+                    st.write(f"**Sub Category:** {product_info['subCategory']}")
+                    st.write(f"**Article Type:** {product_info['articleType']}")
+                    st.write(f"**Base Colour:** {product_info['baseColour']}")
+                    st.write(f"**Season:** {product_info['season']}")
+                    st.write(f"**Year:** {product_info['year']}")
+                    st.write(f"**Usage:** {product_info['usage']}")
+                    st.write('---')
+
+
+# Create the file uploader and camera input in separate columns
+col1, col2 = st.columns(2)
+
+with col1:
+    uploaded_file = st.file_uploader("Choose an Image to get similar products", type=['jpg', 'png', 'jpeg'])
+
+with col2:
+    st.subheader("Capture an Image to get similar products")
+    st.markdown('<style>div.Widget.row-widget.stRadio>div{flex-direction:row;}</style>',unsafe_allow_html=True)
+    st.markdown('<style>#vgip_container {height:300px !important;}</style>', unsafe_allow_html=True)
+    captured_image = st.camera_input("Capture")
 
 if uploaded_file is not None:
     if save_uploaded_file(uploaded_file):
         st.subheader("Uploaded Product:")
-        # Display the uploaded image
         st.image(Image.open(uploaded_file), width=300)
-
-        # Extract the features of the uploaded image
         features = feature_extractor(os.path.join("uploads", uploaded_file.name), model)
-
-        # Recommend similar products
         indices = recommend(features, feature_list)
-
-        # Display the recommended images along with product information
-        st.subheader("Similar Products:")
-        
-        # Iterate over the recommended indices
-        for row in range(2):  # Create 2 rows
-            cols_row = st.columns(3)  # Create 3 columns for each row
-            for col in range(3):  # Create 3 columns in each row
-                idx = row * 3 + col
-                if idx < len(indices[0]):
-                    product_info = csv_data.iloc[indices[0][idx]]
-                    
-                    # Display image and data in a card-like layout
-                    with cols_row[col]:
-                        st.write(
-                            f"<h4 style='color:red;'>{product_info['productDisplayName']}</h4>", unsafe_allow_html=True
-                        )
-                        st.image(filenames[indices[0][idx]], width=200, caption=product_info['productDisplayName'])
-                        st.markdown("  \n  \n")  # Add some space below the image
-                        st.write(f"**Gender:** {product_info['gender']}")
-                        st.write(f"**Master Category:** {product_info['masterCategory']}")
-                        st.write(f"**Sub Category:** {product_info['subCategory']}")
-                        st.write(f"**Article Type:** {product_info['articleType']}")
-                        st.write(f"**Base Colour:** {product_info['baseColour']}")
-                        st.write(f"**Season:** {product_info['season']}")
-                        st.write(f"**Year:** {product_info['year']}")
-                        st.write(f"**Usage:** {product_info['usage']}")
-                        # Add a horizontal line between products
-                        st.write('---')
+        display_recommendations(indices, csv_data, filenames)
     else:
         st.header("Some Error Occurred in file upload")
+
+if captured_image is not None:
+    st.subheader("Captured Product:")
+    st.image(captured_image, width=300)
+    features = feature_extractor(captured_image, model)
+    indices = recommend(features, feature_list)
+    display_recommendations(indices, csv_data, filenames)
