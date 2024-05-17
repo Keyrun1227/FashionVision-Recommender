@@ -1,4 +1,5 @@
 # 🛍️ FashionVision Recommender 📸
+![Image Alt Text](https://github.com/Keyrun1227/FashionVision-Recommender/blob/main/cam1.png)
 
 ## Project Overview
 The **FashionVision Recommender** is a powerful image-based recommendation system that helps users find similar fashion products based on an uploaded or captured image. This project utilizes the Fashion Product Images (Small) dataset from Kaggle to train a deep learning model and provide personalized recommendations to users.
@@ -54,7 +55,14 @@ To further improve the FashionVision Recommender, some potential future enhancem
 - [Nearest Neighbors algorithm documentation](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.NearestNeighbors.html)
 
 ## 🤝 Contribution
-If you find any issues or have suggestions for improvements, feel free to open an issue or submit a pull request on the project's [GitHub repository](https://github.com/your-username/fashion-vision-recommender).
+If you find any issues or have suggestions for improvements, feel free to open an issue or submit a pull request on the project's [GitHub repository](https://github.com/Keyrun1227/FashionVision-Recommender).
 
 ## 🎉 Conclusion
 The FashionVision Recommender is a powerful tool that can revolutionize the way people discover and shop for fashion products. By leveraging the latest advancements in computer vision and deep learning, this project provides a seamless and personalized recommendation experience, empowering users to find their perfect fashion matches. 🛍️👗👔
+
+## FashionVision Recommender - User Interaction Screenshots
+![Image Alt Text](https://github.com/Keyrun1227/FashionVision-Recommender/blob/main/cam2.png)
+
+## FashionVision - Image Upload Interface
+![Image Alt Text](https://github.com/Keyrun1227/FashionVision-Recommender/blob/main/up1.png)
+![Image Alt Text](https://github.com/Keyrun1227/FashionVision-Recommender/blob/main/up2.png)
