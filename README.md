@@ -82,7 +82,7 @@ python app.py
 This will start the Flask server, and you can then access the FashionVision Recommender application by opening a web browser and navigating to http://localhost:5000.
 
 ## 🤝 Contribution
-If you find any issues or have suggestions for improvements, feel free to open an issue or submit a pull request on the project's [GitHub repository](https://github.com/Keyrun1227/FashionVision-Recommender).
+If you find any issues or have suggestions for improvements, feel free to open an issue or submit a pull request on the project's [FashionVision-Recommender](https://github.com/Keyrun1227/FashionVision-Recommender).
 
 ## 🎉 Conclusion
 The FashionVision Recommender is a powerful tool that can revolutionize the way people discover and shop for fashion products. By leveraging the latest advancements in computer vision and deep learning, this project provides a seamless and personalized recommendation experience, empowering users to find their perfect fashion matches. 🛍️👗👔
