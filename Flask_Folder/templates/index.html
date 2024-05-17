@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionVision Recommender</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        #uploadedImage img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .product-card {
+            margin-bottom: 20px;
+        }
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5" style="color: #ff5733; font-family: 'Times New Roman', Times, serif;">FashionVision Recommender</h1>
+        <h3 class="text-center mb-5" style="font-family: 'Times New Roman', Times, serif;">Find similar products to your uploaded image</h3>
+        <form action="/recommend" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" class="form-control-file" name="file" accept=".jpg, .png, .jpeg">
+            </div>
+            <button type="submit" class="btn btn-primary">Upload Image</button>
+        </form>
+        <!-- Display uploaded image -->
+        <div id="uploadedImage" class="text-center mt-5"></div>
+
+        <h3 class="text-center mt-5" style="font-family: 'Times New Roman', Times, serif;">Recommended Products</h3>
+        <div id="recommendations" class="row"></div>
+    </div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('file', e.target.file.files[0]);
+    
+            const response = await fetch('/recommend', {
+                method: 'POST',
+                body: formData
+            });
+    
+            const data = await response.json();
+            const recommendationsDiv = document.getElementById('recommendations');
+            recommendationsDiv.innerHTML = '';
+
+            // Display uploaded image
+            const uploadedImageDiv = document.getElementById('uploadedImage');
+            uploadedImageDiv.innerHTML = `
+                <h3 class="mb-3" style="font-family: 'Times New Roman', Times, serif;">Uploaded Image</h3>
+                <img src="${URL.createObjectURL(e.target.file.files[0])}" alt="Uploaded Image">
+            `;
+    
+            data.products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('col-md-4', 'product-card');
+                productDiv.innerHTML = `
+                    <div class="card">
+                        <img class="card-img-top" src="/${product.image}" alt="${product.productDisplayName}">
+                        <div class="card-body">
+                            <h5 class="card-title" style="color:red;">${product.productDisplayName}</h5>
+                            <p class="card-text"><strong>Gender:</strong> ${product.gender}</p>
+                            <p class="card-text"><strong>Master Category:</strong> ${product.masterCategory}</p>
+                            <p class="card-text"><strong>Sub Category:</strong> ${product.subCategory}</p>
+                            <p class="card-text"><strong>Article Type:</strong> ${product.articleType}</p>
+                            <p class="card-text"><strong>Base Colour:</strong> ${product.baseColour}</p>
+                            <p class="card-text"><strong>Season:</strong> ${product.season}</p>
+                            <p class="card-text"><strong>Year:</strong> ${product.year}</p>
+                            <p class="card-text"><strong>Usage:</strong> ${product.usage}</p>
+                        </div>
+                    </div>
+                `;
+                recommendationsDiv.appendChild(productDiv);
+            });
+        });
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
